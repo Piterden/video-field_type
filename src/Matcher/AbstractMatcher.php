@@ -1,6 +1,8 @@
 <?php namespace Anomaly\VideoFieldType\Matcher;
 
+use Anomaly\Streams\Platform\Image\Image;
 use Anomaly\VideoFieldType\Matcher\Contract\MatcherInterface;
+use Collective\Html\HtmlBuilder;
 
 /**
  * Class AbstractMatcher
@@ -18,6 +20,32 @@ abstract class AbstractMatcher implements MatcherInterface
      * @var null|string
      */
     protected $provider = null;
+
+    /**
+     * The HTML utility.
+     *
+     * @var HtmlBuilder
+     */
+    protected $html;
+
+    /**
+     * The image service.
+     *
+     * @var Image
+     */
+    protected $image;
+
+    /**
+     * Create a new VimeoMatcher instance.
+     *
+     * @param HtmlBuilder $html
+     * @param Image       $image
+     */
+    public function __construct(HtmlBuilder $html, Image $image)
+    {
+        $this->html  = $html;
+        $this->image = $image;
+    }
 
     /**
      * Return the video ID from the video URL.
@@ -48,9 +76,27 @@ abstract class AbstractMatcher implements MatcherInterface
      *
      * @param       $id
      * @param array $attributes
+     * @param array $parameters
      * @return string
      */
-    abstract public function iframe($id, array $attributes = []);
+    abstract public function iframe($id, array $attributes = [], array $parameters = []);
+
+    /**
+     * Return the video's cover image.
+     *
+     * @param $id
+     * @return Image
+     */
+    abstract public function cover($id);
+
+    /**
+     * Return a video image.
+     *
+     * @param      $id
+     * @param null $image
+     * @return Image
+     */
+    abstract public function image($id, $image = null);
 
     /**
      * Get the provider.

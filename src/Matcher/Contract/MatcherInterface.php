@@ -1,5 +1,7 @@
 <?php namespace Anomaly\VideoFieldType\Matcher\Contract;
 
+use Anomaly\Streams\Platform\Image\Image;
+
 /**
  * Interface MatcherInterface
  *
@@ -40,9 +42,27 @@ interface MatcherInterface
      *
      * @param       $id
      * @param array $attributes
+     * @param array $parameters
      * @return string
      */
-    public function iframe($id, array $attributes = []);
+    public function iframe($id, array $attributes = [], array $parameters = []);
+
+    /**
+     * Return the video's cover image.
+     *
+     * @param $id
+     * @return Image
+     */
+    public function cover($id);
+
+    /**
+     * Return a video image.
+     *
+     * @param      $id
+     * @param null $image
+     * @return Image
+     */
+    public function image($id, $image = null);
 
     /**
      * Get the provider.

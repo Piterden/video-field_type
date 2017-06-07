@@ -1,6 +1,7 @@
 <?php namespace Anomaly\VideoFieldType\Matcher;
 
-use Collective\Html\HtmlBuilder;
+use Anomaly\Streams\Platform\Image\Image;
+use GuzzleHttp\Client;
 
 /**
  * Class VimeoMatcher
@@ -18,23 +19,6 @@ class VimeoMatcher extends AbstractMatcher
      * @var string
      */
     protected $provider = 'Vimeo';
-
-    /**
-     * The HTML utility.
-     *
-     * @var HtmlBuilder
-     */
-    protected $html;
-
-    /**
-     * Create a new VimeoMatcher instance.
-     *
-     * @param HtmlBuilder $html
-     */
-    public function __construct(HtmlBuilder $html)
-    {
-        $this->html = $html;
-    }
 
     /**
      * Return the video ID from the video URL.
@@ -78,11 +62,41 @@ class VimeoMatcher extends AbstractMatcher
      * @param array $attributes
      * @return string
      */
-    public function iframe($id, array $attributes = [])
+    public function iframe($id, array $attributes = [], array $parameters = [])
     {
         return '<iframe
             frameborder="0"
-            src="https://player.vimeo.com/video/' . $id . '"
+            src="https://player.vimeo.com/video/' . $id . '?' . http_build_query($parameters) . '"
             ' . $this->html->attributes($attributes) . '></iframe>';
     }
+
+    /**
+     * Return the video's cover image.
+     *
+     * @param $id
+     * @return Image
+     */
+    public function cover($id)
+    {
+        $client = new Client();
+        $res    = $client->request('GET', 'http://vimeo.com/api/v2/video/' . $id . '.json');
+
+        dd($res->getBody());
+    }
+
+    /**
+     * Return a video image.
+     *
+     * @param      $id
+     * @param null $image
+     * @return Image
+     */
+    public function image($id, $image = null)
+    {
+        $client = new Client();
+        $res    = $client->request('GET', 'http://vimeo.com/api/v2/video/' . $id . '.json');
+
+        dd($res->getBody());
+    }
+
 }
